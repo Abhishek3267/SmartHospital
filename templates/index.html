@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Hospital | Healthcare Appointment System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f8fc;
+            color: #203047;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 18px 7%;
+            background: #ffffff;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #087f8c;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 22px;
+        }
+
+        .nav-links a {
+            color: #34445a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #087f8c;
+        }
+
+        .hero {
+            padding: 75px 7%;
+            background: linear-gradient(120deg, #e1f7f5, #edf3ff);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 35px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #526176;
+            max-width: 600px;
+        }
+
+        .hero-card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            width: 290px;
+            box-shadow: 0 10px 35px rgba(20, 60, 90, 0.09);
+        }
+
+        .hero-card h3 {
+            color: #087f8c;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 21px;
+            border: none;
+            border-radius: 8px;
+            background: #087f8c;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #066873;
+        }
+
+        .section {
+            padding: 60px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: #66758a;
+            line-height: 1.6;
+        }
+
+        .department-grid,
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+
+        .department-card,
+        .feature-card {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 14px;
+            border: 1px solid #e4ebf2;
+            box-shadow: 0 5px 18px rgba(20, 50, 80, 0.04);
+        }
+
+        .department-card {
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .department-card:hover {
+            transform: translateY(-4px);
+            border-color: #087f8c;
+        }
+
+        .department-card h3,
+        .feature-card h3 {
+            color: #087f8c;
+        }
+
+        .booking-section {
+            background: #eaf4f8;
+        }
+
+        .booking-container {
+            max-width: 650px;
+            margin: auto;
+            padding: 35px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 28px rgba(20, 50, 80, 0.08);
+        }
+
+        .booking-container h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccd7e2;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: 2px solid #a8dfe1;
+            border-color: #087f8c;
+        }
+
+        .booking-container button {
+            width: 100%;
+        }
+
+        .notice {
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: #fff6dc;
+            color: #73551a;
+            line-height: 1.6;
+        }
+
+        .flash-message {
+            margin: 15px 0;
+            padding: 13px;
+            border-radius: 8px;
+            background: #e3f7eb;
+            color: #17663a;
+        }
+
+        .footer {
+            padding: 28px 7%;
+            text-align: center;
+            background: #183345;
+            color: white;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 18px 5%;
+            }
+
+            .nav-links {
+                gap: 14px;
+            }
+
+            .hero,
+            .section {
+                padding: 40px 5%;
+            }
+
+            .hero-card {
+                width: 100%;
+            }
+
+            .booking-container {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="navbar">
+
+        <div class="logo">
+            🏥 Smart Hospital
+        </div>
+
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="#departments">Departments</a>
+            <a href="{{ url_for('home') }}#booking" class="btn-primary">
+                Book an Appointment →
+            </a>
+            <a href="{{ url_for('search_appointment') }}">Search</a>
+            <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Healthcare Made
+                <span style="color:#087f8c;">Simpler.</span>
+            </h1>
+
+            <p>
+                Welcome to Smart Hospital, a demonstration project
+                designed to simplify appointment booking and help
+                patients navigate hospital departments.
+            </p>
+
+            <a href="#booking" class="btn">
+                Book Appointment →
+            </a>
+
+        </div>
+
+        <div class="hero-card">
+
+            <h3>📅 Easy Appointment Booking</h3>
+
+            <p>
+                Choose a department, select your preferred date,
+                and receive a unique booking reference.
+            </p>
+
+            <hr>
+
+            <p><strong>✓</strong> Simple booking process</p>
+            <p><strong>✓</strong> Booking reference ID</p>
+            <p><strong>✓</strong> Appointment search</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Departments -->
+    <section class="section" id="departments">
+
+        <div class="section-title">
+
+            <h2>Our Departments</h2>
+
+            <p>
+                Select a department to start booking your appointment.
+            </p>
+
+        </div>
+
+        <div class="department-grid">
+
+            <div class="department-card" data-department="Cardiology">
+
+                <h3>❤️ Cardiology</h3>
+
+                <p>
+                    Heart and cardiovascular consultation.
+                </p>
+
+                <a href="#booking">Book Now →</a>
+
+            </div>
+
+
+            <div class="department-card" data-department="Orthopedics">
+
+                <h3>🦴 Orthopedics</h3>
+
+                <p>
+                    Bone, joint, and musculoskeletal consultation.
+                </p>
+
+                <a href="#booking">Book Now →</a>
+
+            </div>
+
+
+            <div class="department-card" data-department="General Medicine">
+
+                <h3>🩺 General Medicine</h3>
+
+                <p>
+                    General health consultation.
+                </p>
+
+                <a href="#booking">Book Now →</a>
+
+            </div>
+
+
+            <div class="department-card" data-department="Neurology">
+
+                <h3>🧠 Neurology</h3>
+
+                <p>
+                    Brain and nervous system consultation.
+                </p>
+
+                <a href="#booking">Book Now →</a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Appointment Booking Form -->
+    <section class="section booking-section" id="booking">
+
+        <div class="booking-container">
+
+            <h2>Book Your Appointment</h2>
+
+            <p style="text-align:center; color:#66758a;">
+                Enter your details to create a demo appointment.
+            </p>
+
+            <div class="notice">
+                <strong>Demo project:</strong>
+                Use fictional test details only. Do not enter real
+                patient or sensitive medical information.
+            </div>
+
+
+            <!-- Flask flash messages -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="flash-message">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+
+            <form method="POST" action="{{ url_for('book_appointment') }}">
+
+                <div class="form-group">
+
+                    <label for="patient_name">
+                        Patient Name
+                    </label>
+
+                    <input type="text" id="patient_name" name="patient_name" placeholder="Enter fictional test name"
+                        maxlength="100" required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="department">
+                        Select Department
+                    </label>
+
+                    <select id="department" name="department" required>
+
+                        <option value="">
+                            Choose a department
+                        </option>
+
+                        {% for department in departments %}
+
+                        <option value="{{ department }}">
+                            {{ department }}
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="appointment_date">
+                        Appointment Date
+                    </label>
+
+                    <input type="date" id="appointment_date" name="appointment_date" min="{{ today }}" required>
+
+                </div>
+
+
+                <button type="submit" class="btn">
+                    Confirm Appointment
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- Features -->
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>Project Features</h2>
+
+            <p>
+                A demonstration of basic hospital appointment workflows.
+            </p>
+
+        </div>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+
+                <h3>📋 Appointment Booking</h3>
+
+                <p>
+                    Submit an appointment request using the booking form.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <h3>🔎 Appointment Search</h3>
+
+                <p>
+                    Look up a demo appointment using its booking ID.
+                </p>
+
+                <a href="{{ url_for('search_appointment') }}">
+                    Search Appointment →
+                </a>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <h3>📊 Admin Dashboard</h3>
+
+                <p>
+                    View appointment counts and department statistics
+                    for this local demonstration.
+                </p>
+
+                <a href="{{ url_for('admin_dashboard') }}">
+                    Open Dashboard →
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <h3>🏥 Smart Hospital</h3>
+
+        <p>
+            Educational prototype for learning web development
+            and cloud architecture.
+        </p>
+
+        <p>
+            This is an independent demo project, not an official
+            hospital booking service.
+        </p>
+
+    </footer>
+
+
+    <!-- Department card selection -->
+    <script>
+        document.querySelectorAll(".department-card").forEach(
+            function (card) {
+
+                card.addEventListener("click", function (event) {
+
+                    if (event.target.tagName.toLowerCase() === "a") {
+                        // Allow the link to scroll to the booking form.
+                    }
+
+                    const department = card.dataset.department;
+                    const select = document.getElementById("department");
+
+                    if (select && department) {
+                        select.value = department;
+                    }
+
+                });
+
+            }
+        );
+    </script>
+
+</body>
+
+</html>

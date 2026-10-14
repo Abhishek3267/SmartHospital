@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointment Search | Smart Hospital</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f7fc;
+            color: #17324d;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e7edf5;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: 750;
+            color: #116b75;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #53677e;
+            margin-left: 25px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #0e8992;
+        }
+
+        /* Main section */
+        .main {
+            max-width: 1100px;
+            margin: 55px auto;
+            padding: 0 22px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #dff5f2;
+            color: #087c78;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 4vw, 42px);
+            margin-bottom: 14px;
+            color: #15324d;
+        }
+
+        .hero p {
+            color: #6b7d91;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* Search card */
+        .search-card {
+            background: white;
+            max-width: 720px;
+            margin: auto;
+            padding: 38px;
+            border-radius: 20px;
+            box-shadow: 0 15px 45px rgba(28, 59, 88, 0.08);
+            border: 1px solid #e9eff6;
+        }
+
+        .card-heading {
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 650;
+            margin-bottom: 10px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        input {
+            width: 100%;
+            min-width: 0;
+            padding: 15px 16px;
+            border: 1px solid #d8e2ed;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #148c91;
+            box-shadow: 0 0 0 3px rgba(20, 140, 145, 0.12);
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 15px 22px;
+            background: #117d83;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #0b646a;
+            transform: translateY(-1px);
+        }
+
+        .hint {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #8492a4;
+        }
+
+        /* Result messages */
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 22px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: #e6f7ef;
+            color: #166b45;
+            border: 1px solid #bde8d0;
+        }
+
+        .error {
+            background: #fff0ef;
+            color: #a33131;
+            border: 1px solid #ffd1cd;
+        }
+
+        .result-card {
+            margin-top: 25px;
+            border: 1px solid #e2eaf2;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .result-title {
+            padding: 17px 20px;
+            background: #f0f8f8;
+            font-weight: 750;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 16px 20px;
+            border-top: 1px solid #edf1f5;
+            font-size: 14px;
+        }
+
+        .result-row span:first-child {
+            color: #718096;
+        }
+
+        .result-row span:last-child {
+            font-weight: 650;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        /* Bottom info */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            max-width: 900px;
+            margin: 35px auto 0;
+        }
+
+        .info-box {
+            background: white;
+            padding: 22px 15px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid #e9eff6;
+        }
+
+        .info-icon {
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .info-box h3 {
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .info-box p {
+            font-size: 12px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            color: #8492a4;
+            font-size: 12px;
+            padding: 30px 15px;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 18px 5%;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-links a {
+                margin-left: 10px;
+                font-size: 12px;
+            }
+
+            .main {
+                margin-top: 35px;
+            }
+
+            .search-card {
+                padding: 24px 18px;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">🏥 Smart Hospital</div>
+
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/admin">Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="main">
+
+        <section class="hero">
+            <div class="badge">PATIENT SERVICES</div>
+
+            <h1>Find Your Appointment</h1>
+
+            <p>
+                Access your appointment details quickly and easily.
+                Enter your booking ID to view your booking information.
+            </p>
+        </section>
+
+        <section class="search-card">
+
+            <h2 class="card-heading">Appointment Lookup</h2>
+
+            <p class="card-description">
+                Enter the unique booking ID you received after
+                booking your appointment.
+            </p>
+
+            <form action="{{ url_for('search_appointment') }}" method="POST">
+
+                <label for="booking_id">Appointment Booking ID</label>
+
+                <div class="input-row">
+                    <input type="text" id="booking_id" name="booking_id" placeholder="Example: SH-A1B2C3D4E5" required
+                        maxlength="13">
+
+                    <button type="submit">Search Appointment →</button>
+                </div>
+
+                <p class="hint">
+                    Your booking ID starts with SH-.
+                </p>
+
+            </form>
+
+            {% if searched and appointment %}
+
+            <div class="message success">
+                Appointment found successfully.
+            </div>
+
+            <div class="result-card">
+                <div class="result-title">
+                    Appointment Details
+                </div>
+
+                <div class="result-row">
+                    <span>Booking ID</span>
+                    <span>{{ appointment["booking_id"] }}</span>
+                </div>
+
+                <div class="result-row">
+                    <span>Patient Name</span>
+                    <span>{{ appointment["patient_name"] }}</span>
+                </div>
+
+                <div class="result-row">
+                    <span>Department</span>
+                    <span>{{ appointment["department"] }}</span>
+                </div>
+
+                <div class="result-row">
+                    <span>Appointment Date</span>
+                    <span>{{ appointment["appointment_date"] }}</span>
+                </div>
+            </div>
+
+            {% elif searched %}
+
+            <div class="message error">
+                No appointment found for this booking ID.
+                Please check the ID and try again.
+            </div>
+
+            {% endif %}
+
+        </section>
+
+        <section class="info-grid">
+
+            <div class="info-box">
+                <div class="info-icon">🔎</div>
+                <h3>Easy Search</h3>
+                <p>Find your booking using its unique ID.</p>
+            </div>
+
+            <div class="info-box">
+                <div class="info-icon">📅</div>
+                <h3>Booking Details</h3>
+                <p>Check your department and appointment date.</p>
+            </div>
+
+            <div class="info-box">
+                <div class="info-icon">🔒</div>
+                <h3>Demo Application</h3>
+                <p>Use fictional data for this learning project.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        Smart Hospital · Educational Demonstration Project
+    </footer>
+
+</body>
+
+</html>

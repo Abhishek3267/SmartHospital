@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Hospital - Admin Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #0f766e;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .total {
+            font-size: 36px;
+            font-weight: bold;
+            color: #0f766e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #0f766e;
+            color: white;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px 10px 10px 0;
+            color: #0f766e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Smart Hospital Admin Dashboard</h1>
+        <p>Hospital appointment management system</p>
+
+        <a href="/">Home</a>
+        <a href="/search">Search Appointment</a>
+
+        <div class="card">
+            <h2>Total Appointments</h2>
+            <div class="total">{{ total }}</div>
+        </div>
+
+        <div class="card">
+            <h2>Department Statistics</h2>
+
+            {% if department_stats %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>Total Appointments</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in department_stats %}
+                        <tr>
+                            <td>{{ item["department"] }}</td>
+                            <td>{{ item["total"] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No appointments have been booked yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>All Appointments</h2>
+
+            {% if appointments %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Patient Name</th>
+                            <th>Department</th>
+                            <th>Appointment Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in appointments %}
+                        <tr>
+                            <td>{{ item["booking_id"] }}</td>
+                            <td>{{ item["patient_name"] }}</td>
+                            <td>{{ item["department"] }}</td>
+                            <td>{{ item["appointment_date"] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No appointments available.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</body>
+
+</html>

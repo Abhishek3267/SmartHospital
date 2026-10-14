@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash
 import sqlite3
 import uuid
@@ -5,6 +7,12 @@ from pathlib import Path
 from datetime import date
 
 app = Flask(__name__)
+load_dotenv()
+
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
+
+if not app.secret_key:
+    raise RuntimeError("FLASK_SECRET_KEY is missing. Check your .env file.")
 app.secret_key = "smart-hospital-demo-secret-key"
 
 BASE_DIR = Path(__file__).resolve().parent
